@@ -1,58 +1,142 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Todo App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Sobre o projeto
 
-## About Laravel
+Este é um aplicativo de lista de tarefas simples, construído em Laravel com Blade para o frontend e PostgreSQL como banco de dados.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O objetivo é permitir que cada usuário controle suas próprias tarefas de forma rápida e segura. A aplicação combina um sistema de autenticação com gerenciamento completo de tarefas, oferecendo uma experiência leve e intuitiva.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## O que o app faz
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Permite que usuários criem uma conta e façam login.
+- Garante que cada tarefa pertença apenas ao usuário que a criou.
+- Exibe uma lista de tarefas pessoais após o login.
+- Permite criar novas tarefas com título e descrição.
+- Permite editar tarefas existentes.
+- Permite marcar tarefas como concluídas.
+- Permite excluir tarefas.
+- Exibe contadores de tarefas totais e concluídas.
 
-## Learning Laravel
+## Por que usar este projeto
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Ideal como um protótipo de gerenciamento pessoal de tarefas.
+- Útil para aprender como autenticação e CRUD funcionam no Laravel.
+- Boa base para expandir com recursos como prioridades, datas de vencimento e filtros.
+- Fornece uma interface limpa com formulários de login, cadastro e gestão de tarefas.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Como ele funciona
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Autenticação
 
-## Agentic Development
+- A página `/login` reúne os formulários de login e cadastro em abas.
+- O `AuthController` trata a validação, criação de usuário, login e logout.
+- Após o login, o usuário é redirecionado para a área de tarefas.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Tarefas
 
-```bash
-composer require laravel/boost --dev
+- As rotas de tarefas estão protegidas por autenticação.
+- O `TaskController` usa `Auth::user()->tasks()` para garantir que apenas tarefas do usuário atual sejam exibidas e manipuladas.
+- Cada tarefa tem:
+  - `title` (obrigatório)
+  - `description` (opcional)
+  - `completed` (booleano)
+- A interface de tarefas permite criar, editar e excluir itens diretamente.
 
-php artisan boost:install
-```
+### Propriedade de dados
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+- O relacionamento `User->tasks()` garante que um usuário não veja ou edite tarefas de outro usuário.
+- Todas as operações de visualização, edição e exclusão buscam a tarefa com `findOrFail` dentro do contexto do usuário autenticado.
 
-## Contributing
+## Estrutura principal
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- `app/Http/Controllers/AuthController.php`: login, cadastro e logout.
+- `app/Http/Controllers/TaskController.php`: criação, leitura, atualização e exclusão de tarefas.
+- `app/Models/User.php`: define o relacionamento com tarefas.
+- `app/Models/Task.php`: define os campos preenchíveis da tarefa.
+- `routes/web.php`: rotas do app, incluindo recursos de tarefa e autenticação.
+- `resources/views/auth/login.blade.php`: página de autenticação com abas.
+- `resources/views/tasks/index.blade.php`: painel de tarefas do usuário.
+- `resources/js/app.js`: contador de tarefas e confirmação de exclusão.
+- `resources/css/auth.css`: estilo da tela de login.
 
-## Code of Conduct
+## Configuração e instalação
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Instale dependências PHP e Node:
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Security Vulnerabilities
+2. Compile os assets:
+   ```bash
+   npm run build
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. Copie `.env.example` para `.env` e ajuste as credenciais de banco:
+   ```bash
+   cp .env.example .env
+   ```
 
-## License
+4. Gere a chave de aplicação:
+   ```bash
+   php artisan key:generate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. Limpe o cache de configuração:
+   ```bash
+   php artisan config:clear
+   ```
+
+6. Execute as migrações:
+   ```bash
+   php artisan migrate
+   ```
+
+7. Inicie o servidor local:
+   ```bash
+   php artisan serve
+   ```
+
+8. Acesse no navegador:
+   - `http://localhost:8000/login`
+
+## Requisitos do ambiente
+
+- PHP com extensões `pdo_pgsql` e `pgsql` habilitadas.
+- PostgreSQL rodando localmente ou em um servidor acessível.
+- Banco de dados criado e configurado no `.env`.
+
+## Uso do aplicativo
+
+### Login e registro
+
+- Use a aba de login para entrar com email e senha.
+- Use a aba de cadastro para criar um novo usuário.
+- Após login, o sistema mantém a sessão segura e permite acessar a lista de tarefas.
+
+### Gestão de tarefas
+
+- Crie tarefas pelo formulário disponível na página de tarefas.
+- Edite o título, a descrição e o status de conclusão.
+- Exclua tarefas que não sejam mais necessárias.
+- Veja a contagem de tarefas e quantas já foram concluídas.
+
+## Sobre o `.env`
+
+- O arquivo `.env.example` é um modelo seguro e deve ficar no repositório.
+- O arquivo real `.env` contém credenciais privadas e não deve ser enviado ao GitHub.
+
+## Utilidade prática
+
+Este aplicativo é útil para:
+
+- construir um sistema de tarefas pessoais com autenticação.
+- entender como o Laravel organiza rotas, controladores, modelos e views.
+- criar um ponto de partida para um app mais completo, adicionando categorias, prazos e notificações.
+
+## Próximos passos sugeridos
+
+- adicionar filtros por status (pendentes/concluídas);
+- incluir datas de vencimento e prioridades;
+- permitir anexos ou notas extras nas tarefas;
+- criar um painel de relatórios de produtividade.
