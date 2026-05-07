@@ -121,11 +121,6 @@ O objetivo é permitir que cada usuário controle suas próprias tarefas de form
 - Exclua tarefas que não sejam mais necessárias.
 - Veja a contagem de tarefas e quantas já foram concluídas.
 
-## Sobre o `.env`
-
-- O arquivo `.env.example` é um modelo seguro e deve ficar no repositório.
-- O arquivo real `.env` contém credenciais privadas e não deve ser enviado ao GitHub.
-
 ## Utilidade prática
 
 Este aplicativo é útil para:
@@ -133,10 +128,3 @@ Este aplicativo é útil para:
 - construir um sistema de tarefas pessoais com autenticação.
 - entender como o Laravel organiza rotas, controladores, modelos e views.
 - criar um ponto de partida para um app mais completo, adicionando categorias, prazos e notificações.
-
-## Próximos passos sugeridos
-
-- adicionar filtros por status (pendentes/concluídas);
-- incluir datas de vencimento e prioridades;
-- permitir anexos ou notas extras nas tarefas;
-- criar um painel de relatórios de produtividade.
